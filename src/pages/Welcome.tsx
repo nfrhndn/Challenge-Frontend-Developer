@@ -9,7 +9,6 @@ import { BrainCircuit } from 'lucide-react';
 export default function Welcome() {
   const [name, setName] = useState('');
   const setUsername = useQuizStore((state) => state.setUsername);
-  const startQuiz = useQuizStore((state) => state.startQuiz);
   const navigate = useNavigate();
 
   const handleStart = (e: React.FormEvent) => {
@@ -17,7 +16,7 @@ export default function Welcome() {
     if (!name.trim()) return;
     
     setUsername(name);
-    startQuiz();
+    // Don't start quiz yet, let user configure it first
     navigate('/quiz');
   };
 
