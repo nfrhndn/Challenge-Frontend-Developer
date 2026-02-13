@@ -8,81 +8,90 @@ import { BrainCircuit } from 'lucide-react';
 
 export default function Welcome() {
   const [name, setName] = useState('');
-  const setUsername = useQuizStore((state) => state.setUsername);
   const navigate = useNavigate();
+  const setUsername = useQuizStore((s) => s.setUsername);
+  const existingUsername = useQuizStore((s) => s.username);
+  const isPlaying = useQuizStore((s) => s.isPlaying);
+  const timeRemaining = useQuizStore((s) => s.timeRemaining);
+  const questions = useQuizStore((s) => s.questions);
+
+  // Resume: if user is already logged in with an unfinished quiz, go to /quiz
+  React.useEffect(() => {
+    if (existingUsername && isPlaying && questions.length > 0 && timeRemaining > 0) {
+      navigate('/quiz');
+    }
+  }, [existingUsername, isPlaying, questions.length, timeRemaining, navigate]);
 
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    
-    setUsername(name);
-    // Don't start quiz yet, let user configure it first
-    navigate('/quiz');
+    setUsername(name.trim());
+    navigate('/setup');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4 overflow-hidden relative">
-      {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] animate-pulse delay-1000" />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-white p-4 overflow-hidden relative">
+      {/* Ambient glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px]" />
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-md w-full bg-gray-900/60 backdrop-blur-2xl p-8 rounded-3xl border border-gray-800 shadow-2xl relative z-10"
+        transition={{ duration: 0.6 }}
+        className="max-w-md w-full relative z-10"
       >
-        <div className="flex flex-col items-center mb-8">
-          <motion.div 
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-10">
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
-            className="p-4 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-2xl mb-6 shadow-inner ring-1 ring-white/10"
+            className="p-4 bg-emerald-500/10 rounded-full mb-5 ring-1 ring-emerald-500/20"
           >
-            <BrainCircuit className="w-12 h-12 text-primary drop-shadow-[0_0_15px_rgba(14,165,233,0.5)]" />
+            <BrainCircuit className="w-10 h-10 text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
           </motion.div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-blue-100 to-gray-400 bg-clip-text text-transparent text-center mb-2">
-            Quiz Master
+          <h1 className="text-3xl font-bold text-emerald-400 tracking-tight mb-1">
+            QuizMania
           </h1>
-          <p className="text-gray-400 text-center text-sm font-medium tracking-wide uppercase opacity-80">
-            Frontend Challenge
+          <p className="text-gray-400 text-sm">
+            ✨ Uji pengetahuanmu sekarang
           </p>
         </div>
 
-        <form onSubmit={handleStart} className="space-y-6">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">
-              Identify Yourself
-            </label>
-            <Input
-              id="name"
-              placeholder="Enter your name..."
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="bg-gray-950/50 border-gray-800 text-white placeholder:text-gray-600 focus:border-primary/50 focus:ring-primary/20 h-14 text-lg px-4 transition-all duration-300 hover:border-gray-700"
-              autoFocus
-              autoComplete="off"
-            />
-          </div>
+        {/* Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="bg-[#1e293b]/80 backdrop-blur-xl rounded-2xl border border-gray-700/50 p-8 shadow-2xl"
+        >
+          <form onSubmit={handleStart} className="space-y-5">
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium text-gray-400">
+                Nama Pengguna
+              </label>
+              <Input
+                id="name"
+                placeholder="Masukkan nama kamu..."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="bg-[#0f172a]/60 border-gray-700 text-white placeholder:text-gray-600 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12"
+                autoFocus
+                autoComplete="off"
+              />
+            </div>
 
-          <Button 
-            variant="primary"
-            size="lg"
-            type="submit" 
-            className="w-full h-14 text-lg font-bold tracking-wide shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98]"
-            disabled={!name.trim()}
-          >
-            Start Challenge
-          </Button>
-        </form>
-
-        <div className="mt-8 pt-6 border-t border-gray-800/50 text-center">
-          <p className="text-xs text-gray-600 font-medium">
-            Designed for <span className="text-gray-400">excellence</span> in every detail.
-          </p>
-        </div>
+            <Button
+              variant="primary"
+              size="lg"
+              type="submit"
+              className="w-full h-12 text-base font-semibold bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-900/30 rounded-xl"
+              disabled={!name.trim()}
+            >
+              Mulai Quiz →
+            </Button>
+          </form>
+        </motion.div>
       </motion.div>
     </div>
   );

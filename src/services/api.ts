@@ -1,45 +1,32 @@
 import axios from "axios";
-
-export interface Question {
-  category: string;
-  type: "multiple" | "boolean";
-  difficulty: "easy" | "medium" | "hard";
-  question: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-  all_answers: string[]; // Shuffled answers
-}
+import type { Question } from "../store/quizStore";
 
 interface ApiResponse {
   response_code: number;
-  results: Question[];
+  results: Omit<Question, 'all_answers'>[];
 }
 
 const API_URL = "https://opentdb.com/api.php";
 
 export const fetchQuizQuestions = async (
   amount: number = 10,
-  difficulty: "easy" | "medium" | "hard" = "medium",
-  type: "multiple" | "boolean" = "multiple",
+  difficulty: "easy" | "medium" | "hard" | "" = "",
+  type: "multiple" | "boolean" | "" = "multiple",
 ): Promise<Question[]> => {
   try {
-    const response = await axios.get<ApiResponse>(API_URL, {
-      params: {
-        amount,
-        difficulty,
-        type,
-      },
-    });
+    // Build params, omitting empty values so API returns mixed
+    const params: Record<string, string | number> = { amount };
+    if (difficulty) params.difficulty = difficulty;
+    if (type) params.type = type;
+
+    const response = await axios.get<ApiResponse>(API_URL, { params });
 
     if (response.data.response_code !== 0) {
-       // If we get a rate limit (code 5) or no results (code 1), strictly we should fallback or wait.
-       // For this challenge, if we fail, let's try a generic fetch (no difficulty) as fallback
-       if (response.data.response_code === 1 && difficulty) {
-           console.log("No results for difficulty, trying any difficulty...");
-           return fetchQuizQuestions(amount, undefined, type);
-       }
-       
-       throw new Error(`Failed to fetch questions. Code: ${response.data.response_code}`);
+      // Fallback: try without difficulty filter
+      if (response.data.response_code === 1 && difficulty) {
+        return fetchQuizQuestions(amount, "", type);
+      }
+      throw new Error(`API Error Code: ${response.data.response_code}`);
     }
 
     return response.data.results.map((question) => ({

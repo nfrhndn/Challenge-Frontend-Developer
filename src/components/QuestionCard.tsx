@@ -17,49 +17,61 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
   };
 
   const optionLabels = ['A', 'B', 'C', 'D'];
+  const optionColors = [
+    'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    'bg-rose-500/20 text-rose-400 border-rose-500/30',
+  ];
 
   return (
-    <div className="w-full px-6 py-4">
-      {/* Category & Difficulty Badges */}
-      <div className="flex justify-between items-center mb-6">
-        <span className="text-gray-400 text-sm font-medium tracking-wide">
+    <div className="w-full px-4 py-4">
+      {/* Category & Difficulty */}
+      <div className="flex justify-between items-center mb-5">
+        <span className="text-gray-400 text-sm font-medium">
           {decodeHTML(question.category)}
         </span>
         <span className={cn(
-          "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full",
-          question.difficulty === 'easy' ? "text-green-400 bg-green-400/10" :
-          question.difficulty === 'medium' ? "text-yellow-400 bg-yellow-400/10" :
-          question.difficulty === 'hard' ? "text-red-400 bg-red-400/10" : "text-gray-400"
+          "text-xs font-bold uppercase tracking-wider",
+          question.difficulty === 'easy' ? "text-green-400" :
+          question.difficulty === 'medium' ? "text-yellow-400" :
+          "text-red-400"
         )}>
-          {question.difficulty}
+          {question.difficulty === 'easy' ? 'Easy' :
+           question.difficulty === 'medium' ? 'Medium' : 'Hard'}
         </span>
       </div>
 
       <AnimatePresence mode='wait'>
         <motion.div
           key={question.question}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-          className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 md:p-8 shadow-xl"
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.25 }}
         >
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-8 leading-relaxed">
-            {decodeHTML(question.question)}
-          </h2>
+          {/* Question */}
+          <div className="bg-[#1e293b]/60 border border-gray-700/40 rounded-xl p-6 mb-6">
+            <h2 className="text-lg md:text-xl font-semibold text-white leading-relaxed">
+              {decodeHTML(question.question)}
+            </h2>
+          </div>
 
-          <div className="grid gap-4">
+          {/* Options */}
+          <div className="space-y-3">
             {question.all_answers.map((answer, index) => (
               <button
                 key={index}
-                className="group relative w-full flex items-center p-4 rounded-xl border border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-primary/50 transition-all duration-200 text-left overflow-hidden"
+                className="group w-full flex items-center p-4 rounded-xl border border-gray-700/50 bg-[#1e293b]/40 hover:bg-[#1e293b]/80 hover:border-emerald-500/30 transition-all duration-200 text-left"
                 onClick={() => onAnswer(answer)}
               >
-                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="shrink-0 w-10 h-10 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center font-bold text-gray-400 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors duration-200 mr-4 z-10">
-                  {optionLabels[index] || '?'}
+                <div className={cn(
+                  "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold mr-4 border transition-colors",
+                  optionColors[index] || 'bg-gray-700 text-gray-300'
+                )}>
+                  {optionLabels[index]}
                 </div>
-                <span className="text-gray-300 font-medium text-base md:text-lg group-hover:text-white transition-colors z-10 flex-1">
+                <span className="text-gray-300 font-medium group-hover:text-white transition-colors flex-1">
                   {decodeHTML(answer)}
                 </span>
               </button>
