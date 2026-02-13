@@ -39,6 +39,7 @@ export interface QuizState {
   setQuestions: (questions: Question[]) => void;
   setFetchStatus: (status: 'idle' | 'loading' | 'success' | 'error') => void;
   submitAnswer: (answer: string) => void;
+  goToQuestion: (index: number) => void;
   tick: () => void;
   finishQuiz: () => void;
   fullReset: () => void;
@@ -107,6 +108,13 @@ export const useQuizStore = create<QuizState>()(
       },
 
       finishQuiz: () => set({ isFinished: true, isPlaying: false, timeRemaining: 0 }),
+
+      goToQuestion: (index) => {
+        const { questions } = get();
+        if (index >= 0 && index < questions.length) {
+          set({ currentQuestionIndex: index });
+        }
+      },
 
       submitAnswer: (answer) => {
         const { questions, currentQuestionIndex, score, answers } = get();

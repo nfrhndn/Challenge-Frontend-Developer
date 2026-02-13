@@ -1,15 +1,17 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Question } from '../store/quizStore';
 import { cn } from '../lib/utils';
+import { CheckCircle } from 'lucide-react';
 
 interface QuestionCardProps {
   question: Question;
   onAnswer: (answer: string) => void;
   questionNumber: number;
   totalQuestions: number;
+  selectedAnswer?: string;
 }
 
-const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
+const QuestionCard = ({ question, onAnswer, selectedAnswer }: QuestionCardProps) => {
   const decodeHTML = (html: string) => {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -25,7 +27,7 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
   ];
 
   return (
-    <div className="w-full px-4 py-4">
+    <div className="w-full py-4">
       {/* Kategori & Kesulitan */}
       <div className="flex justify-between items-center mb-5">
         <span className="text-gray-400 text-sm font-medium">
@@ -59,23 +61,38 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
 
           {/* Pilihan Jawaban */}
           <div className="space-y-3">
-            {question.all_answers.map((answer, index) => (
-              <button
-                key={index}
-                className="group w-full flex items-center p-4 rounded-xl border border-gray-700/50 bg-[#1e293b]/40 hover:bg-[#1e293b]/80 hover:border-emerald-500/30 transition-all duration-200 text-left"
-                onClick={() => onAnswer(answer)}
-              >
-                <div className={cn(
-                  "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold mr-4 border transition-colors",
-                  optionColors[index] || 'bg-gray-700 text-gray-300'
-                )}>
-                  {optionLabels[index]}
-                </div>
-                <span className="text-gray-300 font-medium group-hover:text-white transition-colors flex-1">
-                  {decodeHTML(answer)}
-                </span>
-              </button>
-            ))}
+            {question.all_answers.map((answer, index) => {
+              const isSelected = selectedAnswer === answer;
+
+              return (
+                <button
+                  key={index}
+                  className={cn(
+                    "group w-full flex items-center p-4 rounded-xl border transition-all duration-200 text-left",
+                    isSelected
+                      ? "bg-emerald-500/10 border-emerald-500/50 ring-1 ring-emerald-500/20"
+                      : "border-gray-700/50 bg-[#1e293b]/40 hover:bg-[#1e293b]/80 hover:border-emerald-500/30"
+                  )}
+                  onClick={() => onAnswer(answer)}
+                >
+                  <div className={cn(
+                    "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold mr-4 border transition-colors",
+                    optionColors[index] || 'bg-gray-700 text-gray-300'
+                  )}>
+                    {optionLabels[index]}
+                  </div>
+                  <span className={cn(
+                    "font-medium transition-colors flex-1",
+                    isSelected ? "text-emerald-300" : "text-gray-300 group-hover:text-white"
+                  )}>
+                    {decodeHTML(answer)}
+                  </span>
+                  {isSelected && (
+                    <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 ml-2" />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </motion.div>
       </AnimatePresence>
