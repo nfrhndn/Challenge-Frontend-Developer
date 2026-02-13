@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useQuizStore } from '../store/quizStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { BrainCircuit } from 'lucide-react';
+import { Brain } from 'lucide-react';
 
 export default function Welcome() {
   const [name, setName] = useState('');
@@ -15,10 +15,14 @@ export default function Welcome() {
   const timeRemaining = useQuizStore((s) => s.timeRemaining);
   const questions = useQuizStore((s) => s.questions);
 
-  // Resume: if user is already logged in with an unfinished quiz, go to /quiz
+  // Jika sudah login, arahkan ke setup atau resume kuis
   React.useEffect(() => {
-    if (existingUsername && isPlaying && questions.length > 0 && timeRemaining > 0) {
-      navigate('/quiz');
+    if (existingUsername) {
+      if (isPlaying && questions.length > 0 && timeRemaining > 0) {
+        navigate('/quiz'); // Lanjutkan kuis yang belum selesai
+      } else {
+        navigate('/setup'); // Sudah login, langsung ke setup
+      }
     }
   }, [existingUsername, isPlaying, questions.length, timeRemaining, navigate]);
 
@@ -31,7 +35,7 @@ export default function Welcome() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-white p-4 overflow-hidden relative">
-      {/* Ambient glow */}
+      {/* Efek cahaya */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px]" />
 
       <motion.div
@@ -46,9 +50,9 @@ export default function Welcome() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
-            className="p-4 bg-emerald-500/10 rounded-full mb-5 ring-1 ring-emerald-500/20"
+            className="p-4 bg-emerald-500/10 rounded-2xl mb-5 ring-1 ring-emerald-500/20"
           >
-            <BrainCircuit className="w-10 h-10 text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
+            <Brain className="w-10 h-10 text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
           </motion.div>
           <h1 className="text-3xl font-bold text-emerald-400 tracking-tight mb-1">
             QuizMania
@@ -58,7 +62,7 @@ export default function Welcome() {
           </p>
         </div>
 
-        {/* Card */}
+        {/* Kartu Login */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

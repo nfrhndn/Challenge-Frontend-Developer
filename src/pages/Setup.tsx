@@ -11,7 +11,7 @@ export default function Setup() {
   const navigate = useNavigate();
   const { username, config, setConfig, startQuiz } = useQuizStore();
 
-  // Redirect if not logged in
+  // Arahkan ke login jika belum punya nama
   useEffect(() => {
     if (!username) {
       navigate('/');
@@ -23,8 +23,8 @@ export default function Setup() {
   };
 
   const handleStartQuiz = () => {
-    startQuiz(); // sets isPlaying=true, resets score/answers/etc
-    // Navigate to quiz with config as query params
+    startQuiz(); // Mulai kuis, reset skor & jawaban
+    // Navigasi ke halaman kuis
     const params = new URLSearchParams();
     params.set('amount', String(config.amount));
     if (config.difficulty) params.set('difficulty', config.difficulty);
@@ -57,7 +57,7 @@ export default function Setup() {
         transition={{ duration: 0.4 }}
         className="w-full max-w-xl"
       >
-        {/* Header */}
+        {/* Sapaan */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
@@ -70,9 +70,9 @@ export default function Setup() {
           <h1 className="text-2xl font-bold text-white">Atur Kuis Kamu</h1>
         </div>
 
-        {/* Config Card */}
+        {/* Kartu Pengaturan */}
         <div className="bg-[#1e293b]/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl space-y-7">
-          {/* Difficulty */}
+          {/* Tingkat Kesulitan */}
           <div>
             <label className="text-sm text-gray-400 font-medium mb-3 block">Tingkat Kesulitan</label>
             <div className="grid grid-cols-2 gap-3">
@@ -99,7 +99,7 @@ export default function Setup() {
             </div>
           </div>
 
-          {/* Amount */}
+          {/* Jumlah Soal */}
           <div>
             <label className="text-sm text-gray-400 font-medium mb-3 block">Jumlah Soal</label>
             <div className="grid grid-cols-4 gap-3">
@@ -120,7 +120,7 @@ export default function Setup() {
             </div>
           </div>
 
-          {/* Time */}
+          {/* Waktu */}
           <div>
             <label className="text-sm text-gray-400 font-medium mb-3 flex items-center gap-2">
               <Clock className="w-4 h-4" />
@@ -144,7 +144,7 @@ export default function Setup() {
             </div>
           </div>
 
-          {/* Start Button */}
+          {/* Tombol Mulai */}
           <Button
             variant="primary"
             size="lg"

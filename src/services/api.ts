@@ -14,7 +14,7 @@ export const fetchQuizQuestions = async (
   type: "multiple" | "boolean" | "" = "multiple",
 ): Promise<Question[]> => {
   try {
-    // Build params, omitting empty values so API returns mixed
+    // Buat params, kosongkan jika ingin campuran
     const params: Record<string, string | number> = { amount };
     if (difficulty) params.difficulty = difficulty;
     if (type) params.type = type;
@@ -22,7 +22,7 @@ export const fetchQuizQuestions = async (
     const response = await axios.get<ApiResponse>(API_URL, { params });
 
     if (response.data.response_code !== 0) {
-      // Fallback: try without difficulty filter
+      // Fallback: coba tanpa filter kesulitan
       if (response.data.response_code === 1 && difficulty) {
         return fetchQuizQuestions(amount, "", type);
       }
@@ -37,7 +37,7 @@ export const fetchQuizQuestions = async (
       ].sort(() => Math.random() - 0.5),
     }));
   } catch (error) {
-    console.error("Error fetching quiz questions:", error);
+    console.error("Gagal mengambil soal:", error);
     throw error;
   }
 };

@@ -31,7 +31,7 @@ export default function Results() {
   const skipped = total - answered;
   const percentage = Math.round((correct / total) * 100);
 
-  // Determine message
+  // Tentukan pesan berdasarkan skor
   const getMessage = () => {
     if (percentage >= 80) return { text: 'Luar Biasa! 🎉', color: 'text-emerald-400' };
     if (percentage >= 50) return { text: 'Bagus! 👍', color: 'text-yellow-400' };
@@ -49,7 +49,7 @@ export default function Results() {
     navigate('/');
   };
 
-  // SVG circle for percentage
+  // Lingkaran SVG untuk persentase
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
@@ -62,9 +62,9 @@ export default function Results() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-2xl"
       >
-        {/* Score Card */}
+        {/* Kartu Skor */}
         <div className="bg-[#1e293b]/70 backdrop-blur-xl border border-gray-700/40 rounded-2xl p-8 text-center mb-8 mt-6">
-          {/* Trophy */}
+          {/* Trofi */}
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-amber-500/10 rounded-full ring-1 ring-amber-500/20">
               <Trophy className="w-8 h-8 text-amber-400" />
@@ -77,7 +77,7 @@ export default function Results() {
             <span className="text-sm">{username}</span>
           </div>
 
-          {/* Circular Score */}
+          {/* Skor Lingkaran */}
           <div className="flex justify-center mb-8">
             <div className="relative w-32 h-32">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
@@ -100,7 +100,7 @@ export default function Results() {
             </div>
           </div>
 
-          {/* Stats */}
+          {/* Statistik */}
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
               <CheckCircle className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
@@ -120,7 +120,7 @@ export default function Results() {
           </div>
         </div>
 
-        {/* Answer Review */}
+        {/* Review Jawaban */}
         <div className="mb-8">
           <h2 className="text-xl font-bold text-white mb-4">Review Jawaban</h2>
           <div className="space-y-3">
@@ -144,7 +144,7 @@ export default function Results() {
                         : "bg-red-500/5 border-red-500/20"
                   )}
                 >
-                  {/* Number */}
+                  {/* Nomor */}
                   <div className={cn(
                     "shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mt-0.5",
                     isSkipped
@@ -179,7 +179,7 @@ export default function Results() {
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Tombol Aksi */}
         <div className="flex gap-3 pb-10">
           <Button
             variant="primary"

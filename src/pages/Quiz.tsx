@@ -29,7 +29,7 @@ const Quiz = () => {
     answers,
   } = useQuizStore();
 
-  // Redirect if no username or not playing
+  // Arahkan user sesuai status kuis
   useEffect(() => {
     if (!username) {
       navigate('/');
@@ -45,11 +45,11 @@ const Quiz = () => {
     }
   }, [username, isPlaying, isFinished, navigate]);
 
-  // Fetch questions on mount if needed (fresh quiz or resume with no questions)
+  // Ambil soal saat mount (kuis baru atau resume)
   const loadQuestions = useCallback(async () => {
     if (fetchedRef.current) return;
     if (questions.length > 0) {
-      // Already have questions (resume case) — mark as success
+      // Sudah ada soal (resume), tandai sukses
       if (fetchStatus !== 'success') {
         setFetchStatus('success');
       }
@@ -70,7 +70,7 @@ const Quiz = () => {
     } catch (error) {
       console.error(error);
       setFetchStatus('error');
-      fetchedRef.current = false; // allow retry
+      fetchedRef.current = false; // izinkan retry
     }
   }, [config, questions.length, fetchStatus, setFetchStatus, setQuestions]);
 
@@ -80,7 +80,7 @@ const Quiz = () => {
     }
   }, [isPlaying, isFinished, loadQuestions]);
 
-  // Timer — tick every second
+  // Timer — kurangi tiap detik
   const isTimeUp = timeRemaining <= 0;
   useEffect(() => {
     if (!isPlaying || fetchStatus !== 'success' || isTimeUp) return;
@@ -94,9 +94,9 @@ const Quiz = () => {
     };
   }, [isPlaying, fetchStatus, isTimeUp, tick]);
 
-  // Auto-save state to localStorage every 5 seconds is handled by zustand persist
+  // Simpan otomatis via zustand persist
 
-  // Handle time up
+  // Tangani waktu habis
   useEffect(() => {
     if (isPlaying && timeRemaining <= 0 && fetchStatus === 'success') {
       finishQuiz();
@@ -119,7 +119,7 @@ const Quiz = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Loading
+  // Tampilan loading
   if (fetchStatus === 'loading' || (fetchStatus === 'idle' && questions.length === 0)) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -131,7 +131,7 @@ const Quiz = () => {
     );
   }
 
-  // Error
+  // Tampilan error
   if (fetchStatus === 'error') {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -151,11 +151,18 @@ const Quiz = () => {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
-  const isTimeLow = timeRemaining < 30;
   const answeredCount = Object.keys(answers).length;
   const progressPct = questions.length > 0 ? (currentQuestionIndex / questions.length) * 100 : 0;
 
-  // If all questions answered but not yet marked finished
+  // Styling timer lingkaran
+  const timerPct = config.timeLimit > 0 ? timeRemaining / config.timeLimit : 0;
+  const timerRadius = 18;
+  const timerCircumference = 2 * Math.PI * timerRadius;
+  const timerOffset = timerCircumference - timerPct * timerCircumference;
+  const timerColor = timeRemaining < 30 ? '#ef4444' : timeRemaining < 60 ? '#eab308' : '#10b981';
+  const isTimeLow = timeRemaining < 30;
+
+  // Semua soal dijawab, tunggu proses selesai
   if (!currentQuestion && questions.length > 0) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -179,14 +186,29 @@ const Quiz = () => {
             <span className="font-medium text-sm text-gray-300">{username}</span>
           </div>
 
-          <div className={cn(
-            "flex items-center gap-2 px-4 py-1.5 rounded-full border font-mono",
-            isTimeLow
-              ? "bg-red-500/10 border-red-500/40 text-red-400"
-              : "bg-gray-800/60 border-gray-700 text-white"
-          )}>
-            <Clock className={cn("w-4 h-4", isTimeLow ? "text-red-400 animate-pulse" : "text-emerald-400")} />
-            <span className="font-bold text-lg">{formatTime(timeRemaining)}</span>
+          {/* Timer Lingkaran */}
+          <div className="flex items-center gap-2.5">
+            <div className={cn("relative w-10 h-10", isTimeLow && "animate-pulse")}>
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r={timerRadius} stroke="#1e293b" strokeWidth="3" fill="none" />
+                <circle
+                  cx="20" cy="20" r={timerRadius}
+                  stroke={timerColor}
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray={timerCircumference}
+                  strokeDashoffset={timerOffset}
+                  style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.5s ease' }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Clock className="w-4 h-4" style={{ color: timerColor }} />
+              </div>
+            </div>
+            <span className={cn("font-mono font-bold text-xl", isTimeLow ? "text-red-400" : "text-white")}>
+              {formatTime(timeRemaining)}
+            </span>
           </div>
         </div>
 
@@ -210,7 +232,7 @@ const Quiz = () => {
         </div>
       </header>
 
-      {/* Main */}
+      {/* Konten Utama */}
       <main className="flex-1 w-full max-w-3xl mx-auto flex flex-col justify-center pb-16">
         {currentQuestion && (
           <QuestionCard

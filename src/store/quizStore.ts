@@ -15,7 +15,7 @@ export interface QuizConfig {
   amount: number;
   difficulty: 'easy' | 'medium' | 'hard' | '';
   type: 'multiple' | 'boolean' | '';
-  timeLimit: number; // in seconds
+  timeLimit: number; // dalam detik
 }
 
 export interface QuizState {
@@ -29,9 +29,9 @@ export interface QuizState {
   questions: Question[];
   fetchStatus: 'idle' | 'loading' | 'success' | 'error';
   timeRemaining: number;
-  startedAt: number | null; // timestamp
+  startedAt: number | null;
 
-  // Actions
+  // Aksi
   setUsername: (name: string) => void;
   setConfig: (config: QuizConfig) => void;
   startQuiz: () => void;
@@ -121,7 +121,7 @@ export const useQuizStore = create<QuizState>()(
         const nextIndex = currentQuestionIndex + 1;
 
         if (nextIndex >= questions.length) {
-          // Quiz complete
+          // Kuis selesai
           set({
             answers: newAnswers,
             score: newScore,

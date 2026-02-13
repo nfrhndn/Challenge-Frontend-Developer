@@ -26,7 +26,7 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
 
   return (
     <div className="w-full px-4 py-4">
-      {/* Category & Difficulty */}
+      {/* Kategori & Kesulitan */}
       <div className="flex justify-between items-center mb-5">
         <span className="text-gray-400 text-sm font-medium">
           {decodeHTML(question.category)}
@@ -37,8 +37,8 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
           question.difficulty === 'medium' ? "text-yellow-400" :
           "text-red-400"
         )}>
-          {question.difficulty === 'easy' ? 'Easy' :
-           question.difficulty === 'medium' ? 'Medium' : 'Hard'}
+          {question.difficulty === 'easy' ? 'Mudah' :
+           question.difficulty === 'medium' ? 'Sedang' : 'Sulit'}
         </span>
       </div>
 
@@ -50,14 +50,14 @@ const QuestionCard = ({ question, onAnswer }: QuestionCardProps) => {
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
         >
-          {/* Question */}
+          {/* Pertanyaan */}
           <div className="bg-[#1e293b]/60 border border-gray-700/40 rounded-xl p-6 mb-6">
             <h2 className="text-lg md:text-xl font-semibold text-white leading-relaxed">
               {decodeHTML(question.question)}
             </h2>
           </div>
 
-          {/* Options */}
+          {/* Pilihan Jawaban */}
           <div className="space-y-3">
             {question.all_answers.map((answer, index) => (
               <button
