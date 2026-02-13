@@ -1,73 +1,121 @@
-# React + TypeScript + Vite
+# 🧠 QuizMania
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+**Aplikasi Kuis Interaktif** — Uji pengetahuanmu dengan soal-soal dari berbagai kategori!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 
-## React Compiler
+</div>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Fitur Utama
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Fitur                        | Deskripsi                                                                   |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| 🔐 **Login**                 | Masukkan nama untuk memulai sesi kuis                                       |
+| ⚙️ **Pengaturan Kuis**       | Pilih tingkat kesulitan, jumlah soal, dan batas waktu                       |
+| ⏱️ **Timer Interaktif**      | Timer lingkaran SVG yang berubah warna (hijau → kuning → merah)             |
+| 📊 **Progress Tracking**     | Tampilkan soal ke-N dari total & jumlah yang sudah dijawab                  |
+| 🎯 **Satu Soal per Halaman** | Langsung pindah ke soal berikutnya setelah menjawab                         |
+| 📋 **Halaman Hasil**         | Skor persentase, statistik benar/salah/dilewati, dan review jawaban         |
+| 💾 **Resume Kuis**           | Tutup browser → buka lagi → lanjutkan dari soal terakhir via `localStorage` |
+| 🎨 **UI Modern**             | Glassmorphism, animasi smooth, dark theme premium                           |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Teknologi         | Kegunaan                                   |
+| ----------------- | ------------------------------------------ |
+| **React 19**      | Library UI utama                           |
+| **TypeScript**    | Type-safe development                      |
+| **Zustand**       | State management + persist ke localStorage |
+| **React Router**  | Navigasi antar halaman                     |
+| **Framer Motion** | Animasi & transisi halus                   |
+| **Tailwind CSS**  | Utility-first styling                      |
+| **Axios**         | HTTP client untuk API                      |
+| **Lucide React**  | Icon library                               |
+| **Vite**          | Build tool & dev server                    |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📡 API
+
+Soal diambil dari [Open Trivia Database](https://opentdb.com/) — database gratis berisi ribuan soal trivia dari berbagai kategori.
+
+## 🚀 Cara Menjalankan
+
+### Prasyarat
+
+- **Node.js** versi 18 atau lebih baru
+- **npm** atau **yarn**
+
+### Langkah-langkah
+
+```bash
+# 1. Clone repository
+git clone https://github.com/nfrhndn/Challenge-Frontend-Developer.git
+
+# 2. Masuk ke direktori project
+cd Challenge-Frontend-Developer
+
+# 3. Install dependencies
+npm install
+
+# 4. Jalankan dalam mode development
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Aplikasi akan berjalan di `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📁 Struktur Project
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/
+│   ├── ui/               # Komponen UI dasar (Button, Input)
+│   └── QuestionCard.tsx   # Kartu soal dengan pilihan jawaban
+├── pages/
+│   ├── Welcome.tsx        # Halaman login
+│   ├── Setup.tsx          # Pengaturan kuis
+│   ├── Quiz.tsx           # Halaman mengerjakan kuis
+│   └── Results.tsx        # Halaman hasil & review jawaban
+├── services/
+│   └── api.ts             # Fetch soal dari OpenTDB API
+├── store/
+│   └── quizStore.ts       # State management (Zustand + persist)
+├── lib/
+│   └── utils.ts           # Utility functions
+├── App.tsx                # Routing utama
+└── main.tsx               # Entry point
+```
+
+## 🔄 Alur Aplikasi
+
+```
+Login (/) → Atur Kuis (/setup) → Kerjakan Kuis (/quiz) → Hasil (/results)
+                ↑                                              │
+                └──────────── Main Lagi ───────────────────────┘
+```
+
+- **Main Lagi** → kembali ke pengaturan kuis (nama tetap tersimpan)
+- **Logout** → kembali ke halaman login (data direset)
+- **Tutup browser** → buka lagi → **resume otomatis** dari soal terakhir
+
+## 📝 Scripts
+
+| Perintah          | Fungsi                 |
+| ----------------- | ---------------------- |
+| `npm run dev`     | Jalankan dev server    |
+| `npm run build`   | Build untuk production |
+| `npm run preview` | Preview hasil build    |
+| `npm run lint`    | Cek kode dengan ESLint |
+
+---
+
+<div align="center">
+
+Dibuat dengan ❤️ menggunakan **React + TypeScript**
+
+</div>
